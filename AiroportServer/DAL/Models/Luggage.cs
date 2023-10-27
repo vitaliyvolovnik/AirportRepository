@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public Booking Booking { get; set; }
+        public Booking? Booking { get; set; }
         public int BookingId { get; set; }
 
         public double Wiight { get; set; }

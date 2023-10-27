@@ -30,11 +30,71 @@ namespace DAL.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            ConfigureBooking(modelBuilder.Entity<Booking>());
+            ConfigureCustomer(modelBuilder.Entity<Customer>());
+            ConfigureEmployee(modelBuilder.Entity<Employee>());
+            ConfigureFlight(modelBuilder.Entity<Flight>());
             ConfigureGate(modelBuilder.Entity<Gate>());
 
             base.OnModelCreating(modelBuilder);
         }
 
+
+        private void ConfigureBooking(EntityTypeBuilder<Booking> builder)
+        {
+            builder
+                .HasMany(booking => booking.Luggage)
+                .WithOne(luggage => luggage.Booking)
+                .HasForeignKey(luggage => luggage.BookingId)
+                .IsRequired();
+
+            builder
+                .HasOne(booking =>booking.Flight)
+                .WithMany(flight=> flight.Bookings)
+                .HasForeignKey(booking => booking.FlightsId)
+                .IsRequired();
+        
+            builder
+                .HasOne(booking => booking.Customer)
+                .WithMany(customer => customer.Bookings)
+                .HasForeignKey(booking => booking.CustomerId)
+                .IsRequired();
+        }
+        private void ConfigureCustomer(EntityTypeBuilder<Customer> builder)
+        {
+            builder
+                .HasOne(customer => customer.User)
+                .WithOne()
+                .HasForeignKey<Customer>(customer => customer.UserId)
+                .IsRequired();
+        }
+        private void ConfigureEmployee(EntityTypeBuilder<Employee> builder)
+        {
+            builder
+                .HasOne(employee => employee.User)
+                .WithOne()
+                .HasForeignKey<Employee>(employee => employee.UserId)
+                .IsRequired();
+        }
+        private void ConfigureFlight(EntityTypeBuilder<Flight> builder)
+        {
+            builder
+                .HasOne(flight => flight.Plane)
+                .WithMany()
+                .HasForeignKey(flight => flight.PlaneId)
+                .IsRequired();
+
+            builder
+                .HasMany(flight => flight.Crew)
+                .WithMany();
+
+            builder
+                .HasOne(flight => flight.Gate)
+                .WithMany()
+                .HasForeignKey(flight => flight.GateId)
+                .IsRequired();
+
+        }
         private void ConfigureGate(EntityTypeBuilder<Gate> entityTypeBuilder)
         {
             entityTypeBuilder

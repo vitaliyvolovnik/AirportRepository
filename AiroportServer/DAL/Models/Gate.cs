@@ -11,7 +11,7 @@ namespace DAL.Models
         public int Id { get; set; }
         public int Number { get; set; }
 
-        public Terminal Terminal { get; set; }
+        public Terminal? Terminal { get; set; }
         public int TerminalId { get; set; }
     }
 }

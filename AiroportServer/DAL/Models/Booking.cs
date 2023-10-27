@@ -7,7 +7,7 @@
         public Customer Customer { get; set; }
         public int CustomerId { get; set; }
 
-        public Flight Flights { get; set; }
+        public Flight Flight { get; set; }
         public int FlightsId { get; set;}
 
         public List<Luggage> Luggage { get; set; } 

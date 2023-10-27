@@ -14,7 +14,7 @@ namespace DAL.Models
         public List<Booking> Bookings { get; set; }
 
 
-        public User User { get; set; }
+        public User? User { get; set; }
         public int UserId { get; set; }
 
 

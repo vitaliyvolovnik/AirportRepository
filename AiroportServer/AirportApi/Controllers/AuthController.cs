@@ -12,6 +12,7 @@ using System.Text;
 
 namespace AirportApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
