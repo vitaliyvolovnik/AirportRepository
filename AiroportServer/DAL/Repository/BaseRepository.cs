@@ -13,7 +13,7 @@ namespace DAL.Repository
 {
     public abstract class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        private readonly AirportContext _airportContext;
+        protected readonly AirportContext _airportContext;
 
         public BaseRepository(AirportContext airportContext)
         {

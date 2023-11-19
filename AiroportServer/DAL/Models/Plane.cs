@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace DAL.Models
         public string Model { get; set; }
 
         public int Capacity { get; set; }
+
+        public PlaneState State { get; set; }
 
 
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -12,13 +13,30 @@ namespace DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Address",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Address", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Planes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Capacity = table.Column<int>(type: "int", nullable: false)
+                    Capacity = table.Column<int>(type: "int", nullable: false),
+                    State = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,6 +67,9 @@ namespace DAL.Migrations
                     Lastname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsEmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiry = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -122,8 +143,8 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DepartureAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ArrivalAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DepartureAddressId = table.Column<int>(type: "int", nullable: false),
+                    ArrivalAddressId = table.Column<int>(type: "int", nullable: false),
                     ArrivalDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DepartureDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     GateId = table.Column<int>(type: "int", nullable: false),
@@ -132,6 +153,18 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Flights", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Flights_Address_ArrivalAddressId",
+                        column: x => x.ArrivalAddressId,
+                        principalTable: "Address",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Flights_Address_DepartureAddressId",
+                        column: x => x.DepartureAddressId,
+                        principalTable: "Address",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Flights_Gates_GateId",
                         column: x => x.GateId,
@@ -245,6 +278,16 @@ namespace DAL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Flights_ArrivalAddressId",
+                table: "Flights",
+                column: "ArrivalAddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Flights_DepartureAddressId",
+                table: "Flights",
+                column: "DepartureAddressId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Flights_GateId",
                 table: "Flights",
                 column: "GateId");
@@ -288,6 +331,9 @@ namespace DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Address");
 
             migrationBuilder.DropTable(
                 name: "Gates");

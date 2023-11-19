@@ -1,0 +1,15 @@
+<div class="container">
+    <div class="header-part left">
+        <div class="item">Logoogfodjgd</div>
+    </div>
+    <div class="header-part left">
+        <div class="item">Find Flights</div>
+        <div class="item" *ngIf="securityService.isAuthenticated$ | async">My Bookings</div>
+    </div>
+    <div class="header-part">
+        <div class="item" *ngIf="(securityService.isAuthenticated$ | async) === false" routerLink="/auth">Login</div>
+        <div class="item" *ngIf="(securityService.isAuthenticated$ | async) === false">Sigh up</div>
+        <div class="item" *ngIf="securityService.isAuthenticated$ | async">Profile</div>
+        <div class="item" *ngIf="securityService.isAuthenticated$ | async">Logout</div>
+    </div>
+</div>

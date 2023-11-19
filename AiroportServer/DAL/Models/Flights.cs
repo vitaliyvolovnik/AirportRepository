@@ -5,8 +5,11 @@
 
         public int Id { get; set; }
 
-        public string DepartureAddress { get; set; }
-        public string ArrivalAddress { get; set; }
+        public Address DepartureAddress { get; set; }
+        public int DepartureAddressId { get; set; }
+
+        public Address ArrivalAddress { get; set; }
+        public int ArrivalAddressId { get; set; }
 
         public DateTime ArrivalDate { get; set; }
         public DateTime DepartureDate { get; set; }

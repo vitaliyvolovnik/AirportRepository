@@ -22,6 +22,32 @@ namespace DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DAL.Models.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Address");
+                });
+
             modelBuilder.Entity("DAL.Models.Booking", b =>
                 {
                     b.Property<int>("Id")
@@ -100,16 +126,14 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ArrivalAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ArrivalAddressId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DepartureAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DepartureAddressId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DepartureDate")
                         .HasColumnType("datetime2");
@@ -121,6 +145,10 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ArrivalAddressId");
+
+                    b.HasIndex("DepartureAddressId");
 
                     b.HasIndex("GateId");
 
@@ -186,6 +214,9 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Planes");
@@ -226,12 +257,21 @@ namespace DAL.Migrations
                     b.Property<string>("Firstname")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Lastname")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiry")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -240,6 +280,27 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("DAL.Models.UserToken", b =>
+                {
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Token");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTokens");
                 });
 
             modelBuilder.Entity("EmployeeFlight", b =>
@@ -300,6 +361,18 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Models.Flight", b =>
                 {
+                    b.HasOne("DAL.Models.Address", "ArrivalAddress")
+                        .WithMany()
+                        .HasForeignKey("ArrivalAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Models.Address", "DepartureAddress")
+                        .WithMany()
+                        .HasForeignKey("DepartureAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DAL.Models.Gate", "Gate")
                         .WithMany()
                         .HasForeignKey("GateId")
@@ -311,6 +384,10 @@ namespace DAL.Migrations
                         .HasForeignKey("PlaneId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ArrivalAddress");
+
+                    b.Navigation("DepartureAddress");
 
                     b.Navigation("Gate");
 
@@ -337,6 +414,17 @@ namespace DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("DAL.Models.UserToken", b =>
+                {
+                    b.HasOne("DAL.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EmployeeFlight", b =>

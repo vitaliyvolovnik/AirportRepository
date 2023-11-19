@@ -27,6 +27,7 @@ namespace DAL.Context
         public DbSet<Plane> Planes { get; set; }
         public DbSet<Terminal> Terminals { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,11 +36,15 @@ namespace DAL.Context
             ConfigureEmployee(modelBuilder.Entity<Employee>());
             ConfigureFlight(modelBuilder.Entity<Flight>());
             ConfigureGate(modelBuilder.Entity<Gate>());
+            ConfigureUserToken(modelBuilder.Entity<UserToken>());
 
             base.OnModelCreating(modelBuilder);
         }
 
-
+        private void ConfigureUserToken(EntityTypeBuilder<UserToken> builder)
+        {
+            builder.HasKey(userToken => userToken.Token);
+        }
         private void ConfigureBooking(EntityTypeBuilder<Booking> builder)
         {
             builder

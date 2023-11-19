@@ -2,12 +2,14 @@
 using BLL.Models.Dtos;
 using BLL.Services;
 using BLL.Services.Interfaces;
+using DAL.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace AirportApi.Controllers
@@ -19,11 +21,15 @@ namespace AirportApi.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IConfiguration _config;
+        private readonly IUserService _userService;
+        private readonly IEmployeeService _employeeService;
 
-        public AuthController(IAuthService authService, IConfiguration config)
+        public AuthController(IAuthService authService, IConfiguration config,IUserService userService,IEmployeeService employeeService)
         {
             _authService = authService;
             _config = config;
+            _userService = userService;
+            _employeeService = employeeService;
         }
 
         [AllowAnonymous]
@@ -40,15 +46,29 @@ namespace AirportApi.Controllers
         [HttpPost()]
         public async Task<IActionResult> LoginAsync(Credentials credentials)
         {
-            var logined = await _authService.LoginAsync(credentials);
-            if(logined is not null)
-            {
-                var token = GenerateGwt(logined);
+            var user = await _authService.LoginAsync(credentials);
 
-                return Ok(token);
+            if (user == null)
+                return NotFound();
+
+            EmployeeDto? employee = null;
+            if(user.Role == "EMPLOYEE")
+            {
+                employee = await _employeeService.GetEmployeeByUserAsync(user.Id);
             }
 
-            return BadRequest($"cannot {nameof(LoginAsync)} login");
+            var token = GenerateGwt(user, employee);
+            var refreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+            await _userService.UpdateUserAsync(user, user.Id);
+
+            return Ok(new AuthenticatedResponse()
+            {
+                RefreshToken = refreshToken,
+                Token = token
+            });
         }
 
         [AllowAnonymous]
@@ -60,20 +80,51 @@ namespace AirportApi.Controllers
             return NotFound();
         }
 
-
-        [Authorize]
-        [HttpHead("{email}/s")]
-        public async Task<IActionResult> IsEmailexistsAsync([FromRoute] string email)
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshModel refreshModel)
         {
-            if (await _authService.IsEmailExistAsync(email))
-                return Ok();
-            return NotFound();
+            var principal = GetPrincipalFromExpiredToken(refreshModel.Token);
+
+            if (principal?.Identity?.Name is null)
+                return Unauthorized();
+
+            var user = await _userService.GetUserAsync(principal.Identity.Name);
+
+            if (user is null ||
+                user.RefreshToken != refreshModel.RefreshToken ||
+                user.RefreshTokenExpiry < DateTime.UtcNow)
+                return Unauthorized();
+            var token = GenerateGwt(user);
+
+            return Ok(new AuthenticatedResponse()
+            {
+                RefreshToken = refreshModel.RefreshToken,
+                Token = token
+            });
         }
 
+        [Authorize]
+        [HttpDelete("revoke")]
+        public async Task<IActionResult> Revoke()
+        {
 
+            var username = HttpContext.User.Identity?.Name;
 
+            if (username is null)
+                return Unauthorized();
 
-        private string GenerateGwt(UserDto logined)
+            var user = await _userService.GetUserAsync(username);
+
+            if (user is null)
+                return Unauthorized();
+
+            user.RefreshToken = string.Empty;
+            await _userService.UpdateUserAsync(user, user.Id);
+
+            return Ok();
+        }
+
+        private string GenerateGwt(UserDto logined, EmployeeDto? employee = null)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -85,6 +136,11 @@ namespace AirportApi.Controllers
                 new Claim(ClaimTypes.Surname, logined.Lastname),
                 new Claim(ClaimTypes.Role, logined.Role)
             };
+            if(employee is not null)
+            {
+                claims.Append(new Claim(ClaimTypes.Role, employee.Post));
+            }
+
             var token = new JwtSecurityToken(_config["JWT:Issuer"],
                 _config["JWT:Audience"],
                 claims,
@@ -93,6 +149,30 @@ namespace AirportApi.Controllers
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[64];
+            using var generator = RandomNumberGenerator.Create();
+            generator.GetBytes(randomNumber);
+
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        {
+            var validation = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = _config["Jwt:Issuer"],
+                ValidAudience = _config["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]))
+            };
+
+            return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
         }
     }
 }

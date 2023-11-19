@@ -1,0 +1,38 @@
+@import "src/app-style-variables.scss";
+
+:host{
+    display: flex;
+    height: 60px;
+    align-self: stretch;
+    box-shadow: 0px 1px 12px rgba(129, 127, 127, 0.25);
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'Cuprum';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;      
+    
+    & .container{
+      width: $content-width;  
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      & .header-part{
+        display:  flex;
+        gap: 36px;
+        
+        & .item{
+            cursor: pointer;
+        }
+      }
+      .left{
+        gap: 52px;
+      }
+
+    }
+    
+}

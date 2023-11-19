@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AirportContext))]
-    [Migration("20231022160130_CreateDatabase")]
+    [Migration("20231118171027_CreateDatabase")]
     partial class CreateDatabase
     {
         /// <inheritdoc />
@@ -24,6 +24,32 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DAL.Models.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Address");
+                });
 
             modelBuilder.Entity("DAL.Models.Booking", b =>
                 {
@@ -103,16 +129,14 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ArrivalAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ArrivalAddressId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DepartureAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DepartureAddressId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DepartureDate")
                         .HasColumnType("datetime2");
@@ -124,6 +148,10 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ArrivalAddressId");
+
+                    b.HasIndex("DepartureAddressId");
 
                     b.HasIndex("GateId");
 
@@ -189,6 +217,9 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Planes");
@@ -229,12 +260,21 @@ namespace DAL.Migrations
                     b.Property<string>("Firstname")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Lastname")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiry")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -303,6 +343,18 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Models.Flight", b =>
                 {
+                    b.HasOne("DAL.Models.Address", "ArrivalAddress")
+                        .WithMany()
+                        .HasForeignKey("ArrivalAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Models.Address", "DepartureAddress")
+                        .WithMany()
+                        .HasForeignKey("DepartureAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DAL.Models.Gate", "Gate")
                         .WithMany()
                         .HasForeignKey("GateId")
@@ -314,6 +366,10 @@ namespace DAL.Migrations
                         .HasForeignKey("PlaneId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ArrivalAddress");
+
+                    b.Navigation("DepartureAddress");
 
                     b.Navigation("Gate");
 
