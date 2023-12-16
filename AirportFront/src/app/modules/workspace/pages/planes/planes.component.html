@@ -1,0 +1,80 @@
+
+
+<form #form="ngForm" [formGroup]="createFormGroup" (ngSubmit)="form.valid && create()"
+    class="container plane-create-container card-border" >
+    <div class="input-container cuprum-text">
+        <div class="txt">
+            Add plane
+        </div>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <input pInputText id="manufacturer" class="input-text"
+            formControlName="manufacturer" />
+            <label htmlFor="manufacturer" class="cuprum-text">Manufacturer</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <input pInputText id="model" class="input-text" 
+            formControlName="model" />
+            <label htmlFor="model" class="cuprum-text">Model</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <input pInputText id="maxCargoWeigth" class="input-text"
+            formControlName="maxCargoWeigth"/>   
+            <label htmlFor="maxCargoWeigth" class="cuprum-text">Max cargo weight</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <input pInputText id="capacity" class="input-text"
+            formControlName="capacity" />
+            <label htmlFor="capacity" class="cuprum-text">Capacity</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <p-dropdown [options]="states" placeholder="Select a state" (onChange)="setState($event)"
+            optionLabel="name" inputId="float-label" class="input-text" [style]="{'width':'100%'}"></p-dropdown>
+            <label for="float-label" class="cuprum-text">Select a state</label>
+        </span>
+    </div>
+    <p-button label="Add plane" type="ngSubmit" [disabled]="!createFormGroup.valid"></p-button>
+</form>
+<div class="container plane-list-contaier card-border">
+    <p-table class="tbl"
+    [value]="planes.result" [rows]="5" 
+    [paginator]="true" 
+    [loading]="isLoading" [totalRecords]="planes.totalItems" dataKey="id"
+    [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+    responsiveLayout="scroll" [scrollable]="true" scrollDirection="both"
+    [showCurrentPageReport]="true" scrollHeight="flex"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowsPerPageOptions]="[5, 9]">
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width:10%">Id</th>
+            <th style="width:20%">Manufacturer</th>
+            <th style="width:20%">Model</th>
+            <th style="width:20%">Max cargo weight</th>
+            <th style="width:20%">Capacity</th>
+            <th style="width:10%">state</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-plane>
+        <tr>
+            <td>{{ plane.id }}</td>
+            <td>{{ plane.manufacturer }}</td>
+            <td>{{ plane.model }}</td>
+            <td>{{ plane.maxCargoWeigth }}</td>
+            <td>{{ plane.capacity }}</td>
+            <td><p-tag [severity]="getSevereti(plane.state)" [value]="getState(plane.state)"></p-tag></td>
+        </tr>
+    </ng-template>
+    </p-table>
+</div>

@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 export class SecurityService{
     private readonly USER_KEY = "SECURITY_USER"
 
+
     constructor(private router:Router){
 
     }
@@ -24,7 +25,7 @@ export class SecurityService{
     logout(){
         this.removeUserFromLocalStorage()
         this._isAuthenticated$.next(false)
-        return this.router.navigate(['/'])
+        return this.router.navigate(['/auth'])
     }
 
 
@@ -33,11 +34,14 @@ export class SecurityService{
     }
 
     isAuthenticated(): boolean {
-        return localStorage.getItem(this.USER_KEY) != null
+        let isAuthenticatedbool = localStorage.getItem(this.USER_KEY) != null
+        this._isAuthenticated$.next(isAuthenticatedbool)
+        return isAuthenticatedbool
     }
 
     getUser(): SecurityUser {
         const stringUser: string | null = localStorage.getItem(this.USER_KEY)
+        
         return stringUser ? JSON.parse(stringUser): null
     }
 
@@ -50,8 +54,7 @@ export class SecurityService{
     }
     
     public getJWT(){
-        console.error("ADD JWT TOKEN IMPLEMENTATION")
-        return ""
+        return this.getUser().token;
     }
 
 

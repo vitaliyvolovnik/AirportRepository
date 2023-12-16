@@ -1,4 +1,5 @@
 ﻿using BLL.Models.Dtos;
+using DAL.Models;
 using DAL.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,7 @@ namespace BLL.Services.Interfaces
 
         Task<PlaneDto?> ChangePlaneState(int planeId, PlaneState state);
         Task<PlaneDto?> UpdatePalne(int planeId, PlaneDto plane);
+
+        Task<PagedResult<PlaneDto>> GetPaged(int page,int pageSize);
     }
 }

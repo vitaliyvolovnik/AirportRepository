@@ -1,4 +1,5 @@
 ﻿using BLL.Models.Dtos;
+using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace BLL.Services.Interfaces
         Task<UserDto?> GetUserAsync(string email);
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
         Task<UserDto?> UpdateUserAsync(UserDto newUser, int oldUserId);
+        Task<PagedResult<UserDto>> GetPagedResultAsync(int page, int pageSize);
     }
 }

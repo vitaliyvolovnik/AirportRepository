@@ -1,0 +1,55 @@
+:host{
+    flex: 1;
+
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+
+    padding: 40px;
+    gap: 40px;
+
+    & .container{
+        display: flex;
+        justify-content: stretch;
+        background-color: #ffffff;
+        padding: 20px;
+
+        & p-table{
+            width: 100% !important;
+        }
+
+    }
+
+    & .list-container{
+        flex: 2;
+    }
+    & .employee-edit-form{
+        width: 300px;
+        gap: 32px;
+    
+            flex-direction: column;
+            align-items: center;
+    
+            & .input-container{
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: stretch;
+    
+                & span{
+                    display: flex;
+                    justify-content: stretch;
+                    width: 100%;
+                    & p-dropdown, input{
+                        width: 100% !important;
+                    }
+                }
+                & .txt{
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+    }
+    
+
+}

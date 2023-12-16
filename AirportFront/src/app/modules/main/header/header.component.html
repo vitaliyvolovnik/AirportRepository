@@ -1,15 +1,15 @@
-<div class="container">
-    <div class="header-part left">
-        <div class="item">Logoogfodjgd</div>
+<div class="container cuprum-text">
+    <div class="header-part">
+        <img src="assets/images/logo/logo.png" alt="" class="logo">
     </div>
     <div class="header-part left">
-        <div class="item">Find Flights</div>
-        <div class="item" *ngIf="securityService.isAuthenticated$ | async">My Bookings</div>
+        <div class="item reverse-text">Find Flights</div>
+        <div class="item reverse-text" *ngIf="securityService.isAuthenticated$ | async">My Bookings</div>
     </div>
     <div class="header-part">
-        <div class="item" *ngIf="(securityService.isAuthenticated$ | async) === false" routerLink="/auth">Login</div>
-        <div class="item" *ngIf="(securityService.isAuthenticated$ | async) === false">Sigh up</div>
-        <div class="item" *ngIf="securityService.isAuthenticated$ | async">Profile</div>
-        <div class="item" *ngIf="securityService.isAuthenticated$ | async">Logout</div>
+        <button pButton class="item cuprum-text header-btn" *ngIf="(securityService.isAuthenticated$ | async) === false" routerLink="/auth">Login</button>
+        <div class="item reverse-text" *ngIf="(securityService.isAuthenticated$ | async) === false" routerLink="/auth/register">Sigh up</div>
+        <button pButton class="item cuprum-text header-btn" *ngIf="securityService.isAuthenticated$ | async">Profile</button>
+        <button class="item reverse-text invisible" *ngIf="securityService.isAuthenticated$ | async" (click)="logout()">Logout</button>
     </div>
 </div>

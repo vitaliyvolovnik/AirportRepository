@@ -2,35 +2,46 @@
 
 :host{
     display: flex;
-    height: 60px;
+    height: 96px;
     align-self: stretch;
     box-shadow: 0px 1px 12px rgba(129, 127, 127, 0.25);
     align-items: center;
     justify-content: center;
 
-    font-family: 'Cuprum';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 22px;
-    line-height: 30px;      
-    
+         
+    background-color: $text-color;
     & .container{
       width: $content-width;  
 
       display: flex;
       align-items: center;
       justify-content: space-between;
-
+      font-size: 24px !important;
       & .header-part{
         display:  flex;
         gap: 36px;
+        align-items: center;
         
         & .item{
             cursor: pointer;
         }
+        & .header-btn{
+          font-size: 24px !important;
+        }
+        & .invisible {
+          background: none;
+          border: none;
+          padding: 0;
+          font: inherit;
+          cursor: pointer;
+          outline: inherit;
+        }
       }
       .left{
         gap: 52px;
+      }
+      .logo{
+        height: 50px;
       }
 
     }

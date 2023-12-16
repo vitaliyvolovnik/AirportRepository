@@ -1,7 +1,95 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "src/app-style-variables.scss";
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+
+body{
+    background-color: $backgroud-color;
+    min-height: 100vh;
+}
+
+.cart-container{
+    background: #fff;
+	padding: 30px;
+	box-shadow: 0px 1px 20.58px 0.42px rgba(141, 138, 138, 0.14);
+}
+
+
+.input-text{
+    color: var(--Body-Text-Color, #464646)!important;
+    font-family: Cuprum !important;
+    font-size: 20px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: normal !important;
+}
+
+::placeholder {
+    color: $border-color !important;
+}
+
+.err{
+    font-family: Cuprum;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.cuprum-text{ 
+    font-family: Cuprum !important;
+    font-size: 18px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+}
+
+
+.ubuntu-text{
+    font-family: Ubuntu !important;
+    font-size: 18px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: normal !important;
+}
+
+
+.header-1{
+    font-size: 20px;
+    line-height: normal;
+}
+
+.header-2{
+    color: $text-color;
+    font-family: Ubuntu;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.header-3{
+    color: $text-color;
+    font-family: Ubuntu;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.disabled-text{
+    color: $disable-color !important;
+}
+
+.reverse-text{
+    color: $reverse-text-color !important;
+}
+
+
+.card-border{
+    border: 1px solid $card-border;
+}

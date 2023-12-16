@@ -7,16 +7,27 @@ using BLL.Extentions;
 using System.Security.Cryptography;
 using System.Text;
 using DAL.Models;
+using DAL.Models.Enums;
+using AutoMapper;
 
 namespace BLL.Services
 {
     public class AuthService:IAuthService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserTokenRepository _userTokenRepository;
+        private readonly EmailService _emailService;
+        private readonly IMapper _mapper;
 
-        public AuthService(IUserRepository userRepository)
+        public AuthService(IUserRepository userRepository, 
+            IUserTokenRepository userTokenRepository, 
+            EmailService emailService,
+            IMapper mapper)
         {
             _userRepository = userRepository;
+            _userTokenRepository = userTokenRepository;
+            _emailService = emailService;
+            _mapper = mapper;
         }
 
         public Task<UserDto?> ChangePasswordAsync(string email, string oldPass, string newPass)
@@ -56,10 +67,46 @@ namespace BLL.Services
                     Firstname = registerModel.Firstname,
                     Lastname = registerModel.Lastname,
                     PasswordHash = HashPassword(registerModel.Password),
-                    Role = "Customer"
+                    Role = "CUSROMER",
+                    Customer = new Customer() { }
                 };
-                return (await _userRepository.CreateAsync(user))?.ToDto();
+                var created = await _userRepository.CreateAsync(user);
+                if(created is not null)
+                {
+                    var token = this.GenerateToken(user, TokenType.CONFIRM_EMAIL_TOKEN);
+                    await _userTokenRepository.CreateAsync(token);
 
+                    _emailService.SendEmailConfirmation(token.Token, user.Email);
+
+                    return _mapper.Map<UserDto>(created);
+                }
+
+            }
+            return null;
+        }
+
+        private UserToken GenerateToken(User user,TokenType type)
+        {
+            var token = Guid.NewGuid().ToString();
+            token = token.Replace("_", "");
+            return new UserToken()
+            {
+                Token = token,
+                Type = type,
+                User = user,
+                CreatedTime = DateTime.Now,
+            };
+        }
+
+        public async Task<UserDto?> ConfirmTokenAsync(string token)
+        {
+            
+            var userToken = await _userTokenRepository.UseAsync(token, TokenType.CONFIRM_EMAIL_TOKEN);
+
+            if(userToken is not null) 
+            {
+               userToken.User.IsEmailConfirmed = true;
+                return _mapper.Map<UserDto>(await _userRepository.UpdateAsync(userToken.User));
             }
             return null;
         }

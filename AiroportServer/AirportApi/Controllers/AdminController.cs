@@ -8,7 +8,7 @@ namespace AirportApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "MANAGER")]
+    //[Authorize(Roles = "MANAGER")]
     public class AdminController : ControllerBase
     {
         private readonly IAdministrationService _adminService;
@@ -25,6 +25,12 @@ namespace AirportApi.Controllers
             return Ok(await _adminService.GetAllAsync());
         }
 
+        [HttpGet("{page}/{pageSize}")]
+        public async Task<IActionResult> GetPaged([FromRoute] int page, [FromRoute] int pageSize)
+        {
+            return Ok(await _adminService.GetPagedResultAsync(page,pageSize));
+        }
+
         [HttpGet("{employeeId}")]
         public async Task<IActionResult> Get([FromRoute] int employeeId)
         {
@@ -34,6 +40,14 @@ namespace AirportApi.Controllers
 
             return Ok(emp);
         }
+
+        [HttpGet("post/{post}")]
+        public async Task<IActionResult> GetByPost([FromRoute] string post)
+        {
+
+            return Ok(await _adminService.GetByPostAsync(post));
+        }
+
 
         [HttpPatch("dismit/{employeeId}")]
         public async Task<IActionResult> DismitEmployee([FromRoute] int employeeId)
@@ -54,7 +68,7 @@ namespace AirportApi.Controllers
         }
 
         [HttpPut("{employeeId}")]
-        public async Task<IActionResult> UpdateUser([FromRoute] int employeeId, [FromBody] EmployeeDto employee)
+        public async Task<IActionResult> UpdateEmployee([FromRoute] int employeeId, [FromBody] EmployeeDto employee)
         {
             var updeted = await _adminService.UpdateAsync(employee, employeeId);
             if(updeted  is null) return NotFound();

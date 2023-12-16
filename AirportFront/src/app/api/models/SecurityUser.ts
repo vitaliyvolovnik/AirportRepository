@@ -5,5 +5,7 @@ export interface SecurityUser{
     email: string;
     role: string;
     employee?: Employee;
+    token?:string;
+    refreshToken?:string;
 
 }

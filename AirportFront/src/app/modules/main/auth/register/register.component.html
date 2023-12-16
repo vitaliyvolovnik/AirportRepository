@@ -1,1 +1,43 @@
-<p>register works!</p>
+<form #form="ngForm" [formGroup]="formGroup" (ngSubmit)="form.valid && register()"
+class="cart-container login-form-container">
+    <div class="title">Register</div>
+    <div class="field">
+        <div class="cuprum-text header-1">Firstname</div>
+        <input formControlName="firstname" type="text"
+         placeholder="Enter your firstname" class="input-text" pInputText>
+        <small id="username2-help" [ngClass]="(formGroup.controls['firstname']!.valid 
+        || !formGroup.controls['firstname'].touched)?'hidden':''"
+         class="p-error block err">Firstname is not available.</small>
+    </div>
+    <div class="field">
+        <div class="cuprum-text header-1">Lastname</div>
+        <input formControlName="lastname" type="text" 
+        placeholder="Enter your lastname" class="input-text" pInputText>
+        <small id="username2-help" [ngClass]="(formGroup.controls['lastname']!.valid 
+        || !formGroup.controls['lastname'].touched)?'hidden':''"
+         class="p-error block err">Lastname is not available.</small>
+    </div>
+    <div class="field">
+        <div class="cuprum-text header-1">Email address</div>
+        <input formControlName="email" type="text" placeholder="Enter your email" 
+        class="input-text" pInputText>
+        <small id="username2-help" [ngClass]="(formGroup.controls['email']!.valid 
+        || !formGroup.controls['email'].touched)?'hidden':''"
+         class="p-error block err">Email is not available.</small>
+    </div>
+    <div class="field">
+        <div class="cuprum-text header-1">Password</div>
+        <input type="password" formControlName="password" class="input-text" [feedback]="false"
+        indicator="false" placeholder="Enter your password" pPassword/>
+        <small [ngClass]="(formGroup.controls['password']!.valid 
+            || !formGroup.controls['password'].touched)?'hidden':''" 
+            id="username2-help" class="p-error block err">password is not available.</small>
+    </div>
+    <div class="field">
+        <button pButton pRipple type="submit" label="Register" [disabled]="!formGroup.valid"></button>
+    </div>
+    <div class="field cuprum-text centered disabled-text" routerLink="/auth/">
+        Already have an account
+    </div>
+    
+</form>

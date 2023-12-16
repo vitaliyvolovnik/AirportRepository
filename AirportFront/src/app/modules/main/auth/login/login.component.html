@@ -1,1 +1,40 @@
-<p>login works!</p>
+<form #form="ngForm" [formGroup]="formGroup" (ngSubmit)="form.valid && login()"
+class="cart-container login-form-container">
+    <div class="title indentation">Login</div>
+    <div class="field indentation">
+        <div class="cuprum-text">Only authorized users can book tickets and view past bookings.</div>
+    </div>
+    <div class="field">
+        <div class="cuprum-text header-1">Email address</div>
+        <input id="float-input" formControlName="email" type="text" placeholder="Enter your email" 
+        class="input-text" pInputText>
+        <small id="username2-help" [ngClass]="(formGroup.controls['email']!.valid 
+        || !formGroup.controls['email'].touched)?'hidden':''"
+         class="p-error block err">Email is not available.</small>
+    </div>
+    <div class="field">
+        <div class="cuprum-text header-1">Password</div>
+        <input type="password" formControlName="password" class="input-text" [feedback]="false"
+        indicator="false" placeholder="Enter your password" pPassword/>
+        <small [ngClass]="(formGroup.controls['password']!.valid 
+            || !formGroup.controls['password'].touched)?'hidden':''" 
+            id="username2-help" class="p-error block err">password is not available.</small>
+    </div>
+    <div class="field indentation">
+        <div class="row">
+            <div class="group">
+                <label for="ny" class="cuprum-text">Remember me</label>
+                <p-checkbox  inputId="remember" formControlName="remember" [binary]="true"></p-checkbox>
+            </div>
+            <div class="cuprum-text reset-pass">I forgot my password</div>
+        </div>
+    </div>
+    <div class="field indentation">
+        <button pButton pRipple type="submit" label="Login" [disabled]="!formGroup.valid"></button>
+    </div>
+    <div class="field cuprum-text centered disabled-text" routerLink="/auth/register">
+        Not yet registered
+    </div>
+    
+    
+</form>

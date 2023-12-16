@@ -73,11 +73,11 @@ namespace DAL.Repository
             return await Entities.Where(predicate).ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<PagedResult<TEntity>> GetPagedAsync(int page, int pageSize)
+        public virtual async Task<PagedResult<TEntity>> GetPagedAsync(int page, int pageSize)
         {
             var totalItems = await Entities.CountAsync().ConfigureAwait(false);
             var items = await Entities
-                .Skip((page - 1) * pageSize)
+                .Skip((page) * pageSize)
                 .Take(pageSize)
                 .ToListAsync()
                 .ConfigureAwait(false);
@@ -90,7 +90,7 @@ namespace DAL.Repository
             };
         }
 
-        public async Task<PagedResult<TEntity>> GetPagedAsync(
+        public virtual async Task<PagedResult<TEntity>> GetPagedAsync(
             Expression<Func<TEntity, bool>> predicate, 
             int page, 
             int pageSize, 
@@ -101,12 +101,15 @@ namespace DAL.Repository
 
             IQueryable<TEntity> query = Entities.Where(predicate);
 
-            if (isDescending)
-                query = query.OrderByDescending(orderBy);
-            else
-                query = query.OrderBy(orderBy);
+            if(orderBy is not null)
+            {
+                if (isDescending)
+                    query = query.OrderByDescending(orderBy);
+                else
+                    query = query.OrderBy(orderBy);
+            }
 
-            var orderedEntities = await query.Skip((page - 1) * pageSize)
+            var orderedEntities = await query.Skip(page * pageSize)
                                        .Take(pageSize)
                                        .ToListAsync()
                                        .ConfigureAwait(false);

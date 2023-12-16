@@ -16,7 +16,7 @@ namespace BLL.Models.Dtos
 
         public string? Post { get; set; }
 
-        public UserDto? User { get; set; }
+        public UserShortDto? User { get; set; }
         public int UserId { get; set; }
     }
 }

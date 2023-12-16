@@ -1,0 +1,92 @@
+:host{
+    flex:1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    
+    & .content-item{
+        flex: 1;
+        padding: 40px;
+        gap: 40px;
+        
+        display: flex;
+        
+    }
+    & .container{
+        background-color: #ffffff;
+        padding: 20px;
+    }
+    & .container-item-list{
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: stretch;
+        gap: 40px;
+        & .filters{
+            height: 100px;
+        }
+        & .list{
+            flex: 1;
+        }
+    }
+
+    & .container-item-create{
+        align-items: stretch;
+
+        & .create{
+            flex: 1;
+
+            gap: 32px;
+            display: flex;
+
+            flex-direction: column;
+            align-items: center;
+    
+            & .input-container{
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: stretch;
+                gap: 24px;
+    
+                & span{
+                    display: flex;
+                    justify-content: stretch;
+                    width: 100%;
+                    & p-dropdown, input{
+                        width: 100% !important;
+                    }
+                }
+                & .txt{
+                    width: 100%;
+                    text-align: center;
+                }
+                & p-table{
+                    width: 100%;
+                    min-height: 150px
+                }
+            }
+
+
+        }
+        & .lists-container{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            & .list{
+                flex: 1;
+            }
+        }
+    }
+}
+
+p-calendar{
+    width: 100% !important;
+}
+p-card{
+    width: 100% !important;
+}
+p-chip{
+    margin: 10px !important;
+    padding: 10px !important;
+}

@@ -1,0 +1,142 @@
+<p-tabMenu [model]="items" [activeItem]="activeItem"></p-tabMenu>
+<div class="content-item container-item-list" *ngIf="activeItem.label == 'List'">
+    <div class="container card-border filters">fdsfds</div>
+    <div class="container card-border list">fdsfds</div>
+</div>
+<div class="content-item container-item-create" *ngIf="activeItem.label == 'Create'">
+    <form #form="ngForm" [formGroup]="createFormGroup"
+     class="container card-border create">
+     <div class="input-container cuprum-text">
+        <div class="txt">
+            Add plane
+        </div>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <input pInputText id="departureAddress" class="input-text"
+            formControlName="departureAddress" />
+            <label htmlFor="departureAddress" class="cuprum-text">Departure Address</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <input pInputText id="arrivalAddress" class="input-text" 
+            formControlName="arrivalAddress" />
+            <label htmlFor="arrivalAddress" class="cuprum-text">Arrival Address</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <p-calendar id="arrivalDate" class="input-text"
+            formControlName="arrivalDate" [showTime]="true" [showSeconds]="false" [style]="{'width':'100%'}"></p-calendar> 
+            <label htmlFor="arrivalDate" class="cuprum-text">Arrival Date</label>
+        </span>
+        <span class="p-float-label">
+            <p-calendar id="departureDate" class="input-text"
+            formControlName="departureDate" [showTime]="true" [showSeconds]="false" [style]="{'width':'100%'}"></p-calendar> 
+            <label htmlFor="departureDate" class="cuprum-text">Departure Date</label>
+        </span>
+    </div>
+    <div class="input-container" pDroppable (drop)="dropPlane()">
+        <span class="p-float-label" >
+            <input pInputText id="plane" class="input-text" 
+            formControlName="plane"  />
+            <label htmlFor="plane" class="cuprum-text">Plane(Drop to this field)</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <p-dropdown [options]="allTerminals" placeholder="Select a termianl"
+            optionLabel="name" inputId="float-label" class="input-text" [style]="{'width':'100%'}"></p-dropdown>
+            <label for="float-label" class="cuprum-text">Select a terminal</label>
+        </span>
+    </div>
+    <div class="input-container" pDroppable (drop)="dropEmployee()">
+        <p-table pInputText [value]="crew" [scrollable]="true" scrollHeight="170px" [tableStyle]="{'min-width': '50rem'}">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Fullname</th>
+                    <th>Email</th>
+                    <th>Post</th>
+                    <th>Salury</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-employee>
+                <tr>
+                    <td>{{employee.user.firstname + " " + employee.user.lastname}}</td>
+                    <td>{{employee.user.email}}</td>
+                    <td>{{employee.post}}</td>
+                    <td>{{employee.salury}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <p-button label="Add plane" type="ngSubmit" [disabled]="!createFormGroup.valid"></p-button>
+    </form>  
+    <div class="lists-container">
+        <div class="container card-border list">
+            <p-table [value]="allPlanes" [scrollable]="true" scrollHeight="170px" [tableStyle]="{'min-width': '50rem'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Manufacturer</th>
+                        <th>Model</th>
+                        <th>Capacity</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-plane>
+                    <tr [pDraggable]="plane"
+                        (onDragStart)="dragPlaneStart(plane);"   
+                        (onDragEnd)="dragPlaneEnd()">
+                        <td>{{plane.manufacturer}}</td>
+                        <td>{{plane.model}}</td>
+                        <td>{{plane.capacity}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="container card-border list">
+            <p-table [value]="allPilots" [scrollable]="true" scrollHeight="170px" [tableStyle]="{'min-width': '50rem'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Fullname</th>
+                        <th>Email</th>
+                        <th>Post</th>
+                        <th>Salury</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-employee>
+                    <tr [pDraggable]="employee"
+                        (onDragStart)="dragEmployeeStart(employee);"   
+                        (onDragEnd)="dragEmployeeEnd()">
+                        <td>{{employee.user.firstname + " " + employee.user.lastname}}</td>
+                        <td>{{employee.user.email}}</td>
+                        <td>{{employee.post}}</td>
+                        <td>{{employee.salury}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="container card-border list">
+            <p-table [value]="allFlightAttendants" [scrollable]="true" scrollHeight="170px" [tableStyle]="{'min-width': '50rem'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Fullname</th>
+                        <th>Email</th>
+                        <th>Post</th>
+                        <th>Salury</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-employee>
+                    <tr [pDraggable]="employee"
+                        (onDragStart)="dragEmployeeStart(employee);"   
+                        (onDragEnd)="dragEmployeeEnd()">
+                        <td>{{employee.user.firstname + " " + employee.user.lastname}}</td>
+                        <td>{{employee.user.email}}</td>
+                        <td>{{employee.post}}</td>
+                        <td>{{employee.salury}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

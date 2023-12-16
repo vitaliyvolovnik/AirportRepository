@@ -38,8 +38,8 @@ namespace AirportApi.Controllers
         {
             var registered = await _authService.RegisterAsync(register);
             if (registered is null)
-                return BadRequest("Can not create user");
-            return Ok("user seccessfuly created");
+                return BadRequest();
+            return Ok();
         }
 
         [AllowAnonymous]
@@ -51,13 +51,7 @@ namespace AirportApi.Controllers
             if (user == null)
                 return NotFound();
 
-            EmployeeDto? employee = null;
-            if(user.Role == "EMPLOYEE")
-            {
-                employee = await _employeeService.GetEmployeeByUserAsync(user.Id);
-            }
-
-            var token = GenerateGwt(user, employee);
+            var token = GenerateGwt(user, user?.Employee);
             var refreshToken = GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
@@ -67,6 +61,7 @@ namespace AirportApi.Controllers
             return Ok(new AuthenticatedResponse()
             {
                 RefreshToken = refreshToken,
+                User = user,
                 Token = token
             });
         }
@@ -123,6 +118,23 @@ namespace AirportApi.Controllers
 
             return Ok();
         }
+
+
+        [AllowAnonymous]
+        [HttpPatch("confirm/{token}")]
+        public async Task<IActionResult> ConfirmEmail([FromRoute] string token)
+        {
+            if (string.IsNullOrWhiteSpace(token)) 
+                return BadRequest();
+
+            var userDto = await _authService.ConfirmTokenAsync(token);
+            if(userDto is null)
+                return NotFound();
+
+            return Ok();
+        }
+
+
 
         private string GenerateGwt(UserDto logined, EmployeeDto? employee = null)
         {

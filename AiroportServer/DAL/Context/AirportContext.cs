@@ -69,7 +69,7 @@ namespace DAL.Context
         {
             builder
                 .HasOne(customer => customer.User)
-                .WithOne()
+                .WithOne(user => user.Customer)
                 .HasForeignKey<Customer>(customer => customer.UserId)
                 .IsRequired();
         }
@@ -77,7 +77,7 @@ namespace DAL.Context
         {
             builder
                 .HasOne(employee => employee.User)
-                .WithOne()
+                .WithOne(user => user.Employee)
                 .HasForeignKey<Employee>(employee => employee.UserId)
                 .IsRequired();
         }

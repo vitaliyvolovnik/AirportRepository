@@ -61,7 +61,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularDevServer",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
+        });
+});
 
 ConfigureBll.Configure(builder.Services, config["ConnectionString"]);
 
@@ -88,7 +98,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+app.UseCors("AllowAngularDevServer");
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
@@ -97,6 +107,6 @@ app.UseEndpoints(endpoints =>
 //
 
 
-app.MapControllers();
+//app.MapControllers();
 
 app.Run();

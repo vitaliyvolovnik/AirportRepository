@@ -1,0 +1,77 @@
+<div class="container list-container card-border">
+    <p-table class="tbl"
+    [value]="employees.result" [rows]="5" 
+    [paginator]="true" 
+    [loading]="isLoading" [totalRecords]="employees.totalItems" dataKey="id"
+    [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+    responsiveLayout="scroll" [scrollable]="true" scrollDirection="both"
+    [showCurrentPageReport]="true" scrollHeight="flex"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowsPerPageOptions]="[5, 8]"
+    selectionMode="single"
+    [(selection)]="selectedEmployee"
+    (onRowSelect)="onEmployeeSelect($event)">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:10%">Id</th>
+                <th style="width:20%">Fullname</th>
+                <th style="width:22%">Email</th>
+                <th style="width:20%">Post</th>
+                <th style="width:18%">Salury</th>
+                <th style="width:10%">Dismit</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-employee>
+            <tr [pSelectableRow]="employee">
+                <td>{{ employee.id }}</td>
+                <td>{{ employee.user.firstname + " " + employee.user.lastname }}</td>
+                <td>{{ employee.user.email }}</td>
+                <td *ngIf=" employee.post != null">{{ employee.post }}</td>
+                <td *ngIf=" employee.post == null">not set</td>
+                <td>{{ employee.salury }}</td>
+                <td>
+                    <button pButton pRipple type="button" icon="pi pi-minus" 
+                    class="p-button-rounded p-button-danger" (click)="dismit(employee.id)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<form #form="ngForm" [formGroup]="employeeFormGrou" class="container employee-edit-form card-border">
+    
+    <div class="input-container cuprum-text">
+        <div class="txt">
+            Employee info
+        </div>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <input pInputText id="fullname" class="input-text"
+            formControlName="fullname"  />
+            <label htmlFor="fullname" class="cuprum-text">Fullname</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <input pInputText id="email" class="input-text" 
+            formControlName="email" [disabled]="true"/>
+            <label htmlFor="email" class="cuprum-text">Email</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <input pInputText id="salury" class="input-text"
+            formControlName="salury"/>   
+            <label htmlFor="salury" class="cuprum-text">Salury</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <p-dropdown [options]="posts" placeholder="Select a post" formControlName="postobj"
+            optionLabel="name" inputId="float-label" class="input-text" [style]="{'width':'100%'}"></p-dropdown>
+            <label for="float-label" class="cuprum-text">Select a state</label>
+        </span>
+    </div>
+</form>

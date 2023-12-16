@@ -14,6 +14,7 @@ namespace BLL.Helpers
         public AirportAutoMapperProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User,UserShortDto>().ReverseMap();
             CreateMap<UserToken, UserTokenDto>().ReverseMap();
             CreateMap<Booking, BookingDto>().ReverseMap();
             CreateMap<Customer, CustomerDto>().ReverseMap();

@@ -12,7 +12,7 @@ namespace BLL.Models.Dtos
         public int Id { get; set; }
 
 
-        public UserDto? User { get; set; }
+        public UserShortDto? User { get; set; }
         public int UserId { get; set; }
     }
 }

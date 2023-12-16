@@ -25,6 +25,8 @@ namespace DAL.Models
         public string Role { get; set; } = "CUSTOMER";
 
 
+        public Employee? Employee { get; set; }
+        public Customer? Customer { get; set; }
 
     }
 }

@@ -18,5 +18,7 @@ namespace BLL.Services.Interfaces
         Task<bool> IsEmailExistAsync(string email);
 
         Task<UserDto?> ChangePasswordAsync(string email,string oldPass,string newPass);
+
+        Task<UserDto?> ConfirmTokenAsync(string token);
     }
 }

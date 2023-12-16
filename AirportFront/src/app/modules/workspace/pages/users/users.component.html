@@ -1,0 +1,43 @@
+
+<div class="container list-container card-border">
+    <p-table class="tbl"
+    [value]="users.result" [rows]="5" 
+    [paginator]="true" 
+    [loading]="isLoading" [totalRecords]="users.totalItems" dataKey="id"
+    [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+    responsiveLayout="scroll" [scrollable]="true" scrollDirection="both"
+    [showCurrentPageReport]="true" scrollHeight="flex"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowsPerPageOptions]="[5, 8]">
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width:10%">Id</th>
+            <th style="width:20%">Fullname</th>
+            <th style="width:20%">Email</th>
+            <th style="width:20%">Is email Confirmed</th>
+            <th style="width:10%">Role</th>
+            <th style="width:10%">Promote</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.firstname + " " + user.lastname }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                <p-tag [severity]="user.isEmailConfirmed ? 'success':'warning'" 
+                [value]="user.isEmailConfirmed ? 'confirmed':'not confirmed'"></p-tag>
+            </td>
+            <td>
+                <p-tag [severity]="(user.role === 'CUSTOMER') ? 'success' : 'info'" 
+                [value]="user.role"></p-tag>
+            </td>
+            <td>
+                <p-button icon="pi pi-plus" class="btn" severity="success" (onClick)="promote(user.id)"></p-button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+</div>

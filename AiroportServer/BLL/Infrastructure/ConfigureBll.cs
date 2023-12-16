@@ -36,6 +36,8 @@ namespace BLL.Infrastructure
 
             collection.AddTransient<EmployeeService>();
             collection.AddTransient<IEmployeeService, EmployeeService>();
+
+            collection.AddTransient<EmailService>();
             
 
             //repositories

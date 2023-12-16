@@ -1,0 +1,26 @@
+:host{
+    flex: 1;
+
+    display: flex;
+    align-items: stretch;
+
+
+    padding: 40px;
+    gap: 40px;
+
+    & .container{
+        display: flex;
+        justify-content: stretch;
+        background-color: #ffffff;
+        padding: 20px;
+        flex: 2;
+        & p-table{
+            width: 100% !important;
+        }
+
+    }
+}
+
+.promote-btn{
+    border-radius: 50% !important;
+}

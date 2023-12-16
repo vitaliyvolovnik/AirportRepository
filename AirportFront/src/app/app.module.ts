@@ -9,9 +9,9 @@ import { MessageService } from 'primeng/api';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
-let routes:Routes =[
-  {path:"", loadChildren:() => import("./modules/main/main.module").then(x=>x.MainModule)},
-
+let routes:Routes = [
+  {path: "", loadChildren: ()=> import("./modules/main/main.module").then(x => x.MainModule)},
+  {path: "workspace", loadChildren: ()=> import("./modules/workspace/workspace.module").then(x => x.WorkspaceModule)}
 ]
 
 

@@ -210,6 +210,13 @@ namespace DAL.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
+                    b.Property<string>("Manufacturer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MaxCargoWeigth")
+                        .HasColumnType("int");
+
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -340,7 +347,7 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Models.Customer", b =>
                 {
                     b.HasOne("DAL.Models.User", "User")
-                        .WithOne()
+                        .WithOne("Customer")
                         .HasForeignKey("DAL.Models.Customer", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -351,7 +358,7 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Models.Employee", b =>
                 {
                     b.HasOne("DAL.Models.User", "User")
-                        .WithOne()
+                        .WithOne("Employee")
                         .HasForeignKey("DAL.Models.Employee", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -460,6 +467,13 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Models.Terminal", b =>
                 {
                     b.Navigation("Gates");
+                });
+
+            modelBuilder.Entity("DAL.Models.User", b =>
+                {
+                    b.Navigation("Customer");
+
+                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

@@ -49,6 +49,19 @@ namespace BLL.Services
             return _mapper.Map<PlaneDto>(await _planeRepository.FindFirstAsync(plane => plane.Id == id));
         }
 
+        public async Task<PagedResult<PlaneDto>> GetPaged(int page, int pageSize)
+        {
+            PagedResult<Plane> paged = await _planeRepository.GetPagedAsync(page, pageSize);
+
+            return new PagedResult<PlaneDto>()
+            {
+                PageIndex = paged.PageIndex,
+                PageSize = paged.PageSize,
+                Result = paged.Result.Select(_mapper.Map<PlaneDto>).ToList(),
+                TotalItems = paged.TotalItems
+            };
+        }
+
         public async Task<PlaneDto?> UpdatePalne(int planeId, PlaneDto plane)
         {
             var entity = _mapper.Map<Plane>(plane);

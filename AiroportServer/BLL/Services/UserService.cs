@@ -37,6 +37,19 @@ namespace BLL.Services
             return _mapper.Map<IEnumerable<UserDto>>(await _userRepository.GetAllAsync());
         }
 
+        public async Task<PagedResult<UserDto>> GetPagedResultAsync(int page, int pageSize)
+        {
+            PagedResult<User>  data = await _userRepository.GetPagedAsync(page, pageSize);
+            return new PagedResult<UserDto>
+            {
+                PageIndex = data.PageIndex,
+                PageSize = data.PageSize,
+                TotalItems = data.TotalItems,
+                Result = data.Result.Select(_mapper.Map<UserDto>)
+            };
+
+        }
+
         public async Task<UserDto?> GetUserAsync(int userId)
         {
             return _mapper.Map<UserDto>(await _userRepository.FindFirstAsync(x => x.Id == userId));

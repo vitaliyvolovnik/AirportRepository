@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,13 @@ namespace DAL.Repository
             return await Entities.AnyAsync(user => user.Email == email).ConfigureAwait(false);
         }
 
-        
+        public override async Task<User?> FindFirstAsync(Expression<Func<User, bool>> predicate)
+        {
+            return await Entities
+                .Include(x=>x.Employee)
+                .FirstAsync(predicate);
+        }
+
+
     }
 }

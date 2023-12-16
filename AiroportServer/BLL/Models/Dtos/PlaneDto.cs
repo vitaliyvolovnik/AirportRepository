@@ -10,13 +10,17 @@ namespace BLL.Models.Dtos
 {
     public class PlaneDto
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
+
+        public string Manufacturer { get; set; }
+
+        public int MaxCargoWeigth { get; set; }
 
         public string Model { get; set; }
 
         public int Capacity { get; set; }
             
-        public PlaneState State { get; set; }
+        public PlaneState? State { get; set; }
        
     }
 }

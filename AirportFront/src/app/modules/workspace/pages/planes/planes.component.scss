@@ -1,0 +1,59 @@
+:host{
+    flex: 1;
+
+    display: flex;
+    align-items: stretch;
+
+
+    padding: 40px;
+    gap: 40px;
+
+    & .container{
+        display: flex;
+        
+        background-color: #ffffff;
+        padding: 20px;
+
+    }
+
+    & .plane-create-container{
+        width: 280px;
+        gap: 32px;
+
+        flex-direction: column;
+        align-items: center;
+
+        & .input-container{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: stretch;
+
+            & span{
+                display: flex;
+                justify-content: stretch;
+                width: 100%;
+                & p-dropdown, input{
+                    width: 100% !important;
+                }
+            }
+            & .txt{
+                width: 100%;
+                text-align: center;
+            }
+        }
+    }
+
+    & .plane-list-contaier{
+        flex: 3;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: stretch;
+        
+        & .tbl{
+            flex: 1;
+            height: 100%;
+        }
+    }
+
+}
