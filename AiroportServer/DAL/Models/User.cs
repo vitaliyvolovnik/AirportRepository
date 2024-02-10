@@ -26,7 +26,6 @@ namespace DAL.Models
 
 
         public Employee? Employee { get; set; }
-        public Customer? Customer { get; set; }
 
     }
 }

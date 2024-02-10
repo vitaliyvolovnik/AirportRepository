@@ -6,14 +6,13 @@ import { HeaderComponent } from './header/header.component';
 import { RouterOutlet } from '@angular/router';
 import {ButtonModule} from "primeng/button";
 import {RippleModule} from "primeng/ripple";
-import { FlightComponent } from './Flights/flight/flight.component';
 
 
 @NgModule({
   declarations: [
     MainLayoutComponent,
     HeaderComponent,
-    FlightComponent
+
   ],
   imports: [
     CommonModule,
@@ -22,6 +21,7 @@ import { FlightComponent } from './Flights/flight/flight.component';
     ButtonModule,
     RippleModule,
     
-  ]
+  ],
+  exports:[]
 })
 export class MainModule { }

@@ -5,7 +5,7 @@ import { Role } from "../api/models/enums/Role";
 import { Injectable } from "@angular/core";
 
 @Injectable({providedIn:"root"})
-export class EmployeeGuard implements CanActivate{
+export class EmployeePostGuard implements CanActivate{
 
     constructor(private securityService:SecurityService,
         private router:Router){

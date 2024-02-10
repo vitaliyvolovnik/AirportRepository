@@ -6,6 +6,7 @@ using BLL.Services.Interfaces;
 using DAL.Repository;
 using DAL.Repository.Interfaces;
 using System.ComponentModel.Design;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BLL.Infrastructure
 {
@@ -37,9 +38,12 @@ namespace BLL.Infrastructure
             collection.AddTransient<EmployeeService>();
             collection.AddTransient<IEmployeeService, EmployeeService>();
 
+            collection.AddTransient<TerminalService>();
+            collection.AddTransient<ITerminalService,TerminalService>();
+
+
             collection.AddTransient<EmailService>();
             
-
             //repositories
             collection.AddTransient<UserRepository>();
             collection.AddTransient<IUserRepository, UserRepository>();
@@ -52,6 +56,11 @@ namespace BLL.Infrastructure
 
             collection.AddTransient<UserTokenRepository>();
             collection.AddTransient<IUserTokenRepository, UserTokenRepository>();
+
+            collection.AddTransient<FlightRepository>();
+
+            collection.AddTransient<TerminalRepository>();
+            
         }
     }
 }

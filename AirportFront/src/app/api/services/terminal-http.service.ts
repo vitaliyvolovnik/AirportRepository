@@ -8,7 +8,7 @@ import { Terminal } from "../models/Terminal";
 @Injectable({providedIn:"root"})
 export class TerminalHttpService{
 
-    private readonly AUTH_URL = `${API_URL}/Terminal`
+    private readonly AUTH_URL = `${API_URL}/Flight`
 
     constructor(private httpClient:HttpClient){
 
@@ -16,7 +16,7 @@ export class TerminalHttpService{
 
 
     getAll(){
-        return this.httpClient.get(`${this.AUTH_URL}`);
+        return this.httpClient.get(`${this.AUTH_URL}/terminals`);
     }
 
 

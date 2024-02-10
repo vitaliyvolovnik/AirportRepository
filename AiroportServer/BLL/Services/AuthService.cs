@@ -68,7 +68,6 @@ namespace BLL.Services
                     Lastname = registerModel.Lastname,
                     PasswordHash = HashPassword(registerModel.Password),
                     Role = "CUSROMER",
-                    Customer = new Customer() { }
                 };
                 var created = await _userRepository.CreateAsync(user);
                 if(created is not null)

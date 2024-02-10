@@ -14,11 +14,14 @@ namespace BLL.Models.Dtos
         public string DepartureAddress { get; set; }
         public string ArrivalAddress { get; set; }
 
+        public string Status { get; set; }
+        public decimal TicketCost { get; set; }
+
         public DateTime ArrivalDate { get; set; }
         public DateTime DepartureDate { get; set; }
 
-        public GateDto? Gate { get; set; }
-        public int GateId { get; set; }
+        public TerminalDto? Terminal { get; set; }
+        public int TerminalId { get; set; }
 
         public PlaneDto? Plane { get; set; }
         public int PlaneId { get; set; }

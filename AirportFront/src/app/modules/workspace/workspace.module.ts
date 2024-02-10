@@ -6,6 +6,7 @@ import { routings } from './workspace.routing';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { BadgeModule } from 'primeng/badge';
 import { PlanesComponent } from './pages/planes/planes.component';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { PlanesComponent } from './pages/planes/planes.component';
     CommonModule,
     TabMenuModule,
     BadgeModule,
+    ButtonModule,
     routings
   ]
 })

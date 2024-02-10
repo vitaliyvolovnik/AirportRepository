@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.Interfaces
 {
-    public interface IGateService
+    public interface ITerminalService
     {
-        Task<GateDto?> CreateAsync(GateDto gate);
-
-        Task<IEnumerable<GateDto>> GetAllAsync();
-
+        Task<IEnumerable<TerminalDto>> GetAllAsync();
+        Task<TerminalDto?> CreateAsync(TerminalDto terminalDto);
 
     }
 }

@@ -1,10 +1,55 @@
 <p-tabMenu [model]="items" [activeItem]="activeItem"></p-tabMenu>
 <div class="content-item container-item-list" *ngIf="activeItem.label == 'List'">
-    <div class="container card-border filters">fdsfds</div>
-    <div class="container card-border list">fdsfds</div>
+    <div class="container card-border list">
+        <p-table class="tbl"
+            [value]="flights.result" [rows]="5" 
+            [paginator]="true" 
+            [loading]="isLoading" [totalRecords]="flights.totalItems" dataKey="id"
+            [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+            responsiveLayout="scroll" [scrollable]="true" scrollDirection="both"
+            [showCurrentPageReport]="true" scrollHeight="flex"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[5, 9]">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width:2%">Id</th>
+                    <th style="width:15%">departureAddress</th>
+                    <th style="width:23%">arrivalAddress</th>
+                    <th style="width:10%">arrivalDate</th>
+                    <th style="width:10%">departureDate</th>
+                    <th style="width: 5%">ticketCost</th>
+                    <th style="width:10%">SeatBookign</th>
+                    <th style="width:10%">State</th>
+                    <th style="width:10%">Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-flight>
+                <tr>
+                    <td>{{ flight.id }}</td>
+                    <td>{{ flight.departureAddress }}</td>
+                    <td>{{ flight.arrivalAddress }}</td>
+                    <td>{{ flight.departureDate | date:"MM.dd.YYYY hh:mm" }}</td>
+                    <td>{{ flight.arrivalDate | date:"MM.dd.YYYY hh:mm"}}</td>
+                    <td>{{ flight.ticketCost }}</td>
+                    <td><p-tag [severity]="getSevereti(flight.status)">{{flight.status}}</p-tag></td>
+                    <td>{{ flight.bookigs?.length ?? 0}}/{{flight.plane.capacity}}</td>
+                    <td>
+                        <button *ngIf="flight.status == 'EXPECTED'|| flight.status == 'EXPECTED'"
+                        pButton pRipple type="button" icon="pi pi-times" dis
+                    class="p-button-rounded p-button-warning" (click)="cansel(flight.id)"></button>
+                    <button *ngIf="flight.status == 'CANSELED'"
+                    pButton pRipple type="button" icon="pi pi-plus" dis
+                class="p-button-rounded p-button-success" (click)="restore(flight.id)"></button>    
+                    </td>
+                </tr>
+            </ng-template> 
+        </p-table>
+    </div>
 </div>
 <div class="content-item container-item-create" *ngIf="activeItem.label == 'Create'">
-    <form #form="ngForm" [formGroup]="createFormGroup"
+    <form #form="ngForm" [formGroup]="createFormGroup" (ngSubmit)="form.valid && create()"
      class="container card-border create">
      <div class="input-container cuprum-text">
         <div class="txt">
@@ -23,6 +68,13 @@
             <input pInputText id="arrivalAddress" class="input-text" 
             formControlName="arrivalAddress" />
             <label htmlFor="arrivalAddress" class="cuprum-text">Arrival Address</label>
+        </span>
+    </div>
+    <div class="input-container">
+        <span class="p-float-label">
+            <input pInputText id="ticketCost" class="input-text"
+            formControlName="ticketCost" />
+            <label htmlFor="=ticketCost" class="cuprum-text">Ticket price</label>
         </span>
     </div>
     <div class="input-container">
@@ -46,13 +98,19 @@
     </div>
     <div class="input-container">
         <span class="p-float-label">
-            <p-dropdown [options]="allTerminals" placeholder="Select a termianl"
+            <p-dropdown [options]="allTerminals" placeholder="Select a termianl" formControlName="terminal"
             optionLabel="name" inputId="float-label" class="input-text" [style]="{'width':'100%'}"></p-dropdown>
             <label for="float-label" class="cuprum-text">Select a terminal</label>
         </span>
     </div>
-    <div class="input-container" pDroppable (drop)="dropEmployee()">
-        <p-table pInputText [value]="crew" [scrollable]="true" scrollHeight="170px" [tableStyle]="{'min-width': '50rem'}">
+    <div class="input-container" style="flex-direction: column; position: relative;" pDroppable (drop)="dropEmployee()">
+        <span class="p-float-label" style="position: absolute;">
+            <input pInputText id="arrivalAddress" class="input-text" 
+            style="display: none;" />
+            <label htmlFor="arrivalAddress" class="cuprum-text">Crew(Drop item to this table)</label>
+        </span>
+        <p-table pInputText [value]="crew" 
+        [scrollable]="true" scrollHeight="180px" [tableStyle]="{'min-width': '50rem'}">
             <ng-template pTemplate="header">
                 <tr>
                     <th>Fullname</th>
@@ -71,7 +129,7 @@
             </ng-template>
         </p-table>
     </div>
-    <p-button label="Add plane" type="ngSubmit" [disabled]="!createFormGroup.valid"></p-button>
+    <p-button label="Add plane" class="subm-btn" type="ngSubmit" [disabled]="!createFormGroup.valid"></p-button>
     </form>  
     <div class="lists-container">
         <div class="container card-border list">

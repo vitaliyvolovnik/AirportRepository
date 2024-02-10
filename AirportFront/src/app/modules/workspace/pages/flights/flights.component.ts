@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -9,7 +9,7 @@ import { Dropdown, DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TabMenuModule } from 'primeng/tabmenu';
-import { first } from 'rxjs';
+import { finalize, first } from 'rxjs';
 import { Employee } from 'src/app/api/models/Employee';
 import { Plane } from 'src/app/api/models/Plane';
 import { Terminal } from 'src/app/api/models/Terminal';
@@ -21,6 +21,9 @@ import { DragDropModule } from 'primeng/dragdrop';
 import { ChipModule } from 'primeng/chip';
 import { TagModule } from 'primeng/tag';
 import { CardModule } from 'primeng/card';
+import { Flight } from 'src/app/api/models/Flight';
+import { RestPage } from 'src/app/api/models/RestPage';
+import { Pagination } from 'src/app/api/models/Pagination';
 
 
 @Component({
@@ -71,16 +74,16 @@ export class FlightsComponent implements OnInit {
   }
 
   initData(){
-    //this.terminalService.getAll()
-    //  .pipe(first())
-    //  .subscribe({
-    //    next:(terminlas)=>{
-    //      this.allTerminals = terminlas as Terminal[]
-    //    },
-    //    error: (err) =>{
-    //      console.log(err);
-    //    }
-    //  })
+    this.terminalService.getAll()
+      .pipe(first())
+      .subscribe({
+        next:(terminlas)=>{
+          this.allTerminals = terminlas as Terminal[]
+        },
+        error: (err) =>{
+          console.log(err);
+        }
+      })
 
     this.planeService.getAll()
       .pipe(first())
@@ -117,11 +120,12 @@ export class FlightsComponent implements OnInit {
 
   initForm(){
     this.createFormGroup = this.formBuilder.group({
-      departureAddress: new FormControl(""),
-      arrivalAddress: new FormControl(""),
-      arrivalDate: new FormControl(Date.now()),
-      departureDate: new FormControl(Date.now()),
-      terminal: new FormControl(null),
+      departureAddress: new FormControl("", Validators.required),
+      arrivalAddress: new FormControl("", Validators.required),
+      arrivalDate: new FormControl(Date.now(), Validators.required),
+      departureDate: new FormControl(Date.now(), Validators.required),
+      terminal: new FormControl(null, Validators.required),
+      ticketCost: new FormControl(0, Validators.required),
       plane: new FormControl({value:null,disabled:true})
     })
   }
@@ -141,9 +145,6 @@ export class FlightsComponent implements OnInit {
   dragPlaneEnd() { 
       this.currentlyDraggingPlane = null;  
   } 
-
-  
-
   dragEmployeeStart(employee: Employee) { 
     this.currentlyDraggingEmployee = employee; 
   } 
@@ -157,6 +158,86 @@ export class FlightsComponent implements OnInit {
       this.crew.push(this.currentlyDraggingEmployee)
       console.log(this.crew)
     }
+  }
+
+  create(){
+    let flight = this.createFormGroup.value as Flight
+    flight.plane = this.plane
+    flight.crew = this.crew
+    
+    this.flightService.create(flight)
+    .pipe(first())
+    .subscribe({
+      next: () => {
+        this.messageService.add({ severity: 'success', summary: 'Add flight', detail: 'flight is added seccesfuly' })
+        this.initForm()
+        this.plane = undefined;
+        this.crew = [];
+
+      },
+      error: (err) =>{
+          this.messageService.add({ severity:"error", summary: 'Add flight', detail: 'Cannot add flight'})
+      }
+    })
+  }
+
+  flights: RestPage<Flight> = new RestPage<Flight>();
+  lastPag!: Pagination;
+  
+  isLoading: boolean = false;
+
+  onLazyLoad(event: any) {
+
+    this.lastPag = Pagination.fromPrimeNg(event);
+    this.loadData(Pagination.fromPrimeNg(event));
+  }
+
+  loadData(pagination: Pagination = new Pagination()) {
+    this.isLoading = true;
+    this.flightService.getPaged(pagination.page, pagination.size)
+      .pipe(first(), finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (flights) => {
+          console.log(flights)
+          this.flights = flights as RestPage<Flight>;
+        },
+        error: error => console.error(error)
+      })
+  }
+//<td></td>
+  cansel(id:number){
+    this.flightService.changeStatus(id,"CANSELED")
+    .pipe(first())
+    .subscribe({
+      next:()=>{
+        this.loadData(this.lastPag);
+      }
+    })
+  }
+  restore(id:number){
+    this.flightService.changeStatus(id,"EXPECTED")
+    .pipe(first())
+    .subscribe({
+      next:()=>{
+        this.loadData(this.lastPag);
+      }
+    })
+  }
+
+  getSevereti(status:any){
+    switch(status){
+      case "EXPECTED":
+        return 'success';
+        case "POSTPONED":
+        return 'warning';
+        case "FINISHED":
+        return 'info';
+        case "CANSELED":
+        return 'danger';
+
+      
+    }
+    return ""
   }
 
 }

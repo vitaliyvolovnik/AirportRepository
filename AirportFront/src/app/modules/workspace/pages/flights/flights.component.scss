@@ -61,9 +61,17 @@
                     text-align: center;
                 }
                 & p-table{
+                    margin-top: 20px;
                     width: 100%;
-                    min-height: 150px
+                    min-height: 180px
                 }
+                & .table-header{
+                    align-self: flex-start;
+                }
+            }
+
+            & .subm-btn{
+                align-self: flex-start;
             }
 
 

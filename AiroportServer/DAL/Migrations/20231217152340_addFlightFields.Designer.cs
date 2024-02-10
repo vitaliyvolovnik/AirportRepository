@@ -4,6 +4,7 @@ using DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AirportContext))]
-    partial class AirportContextModelSnapshot : ModelSnapshot
+    [Migration("20231217152340_addFlightFields")]
+    partial class addFlightFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,19 +36,38 @@ namespace DAL.Migrations
                     b.Property<DateTime>("BookingTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("FlightsId")
                         .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("FlightsId");
+
+                    b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("DAL.Models.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlightsId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Bookings");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("DAL.Models.Employee", b =>
@@ -266,19 +288,30 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Models.Booking", b =>
                 {
+                    b.HasOne("DAL.Models.Customer", "Customer")
+                        .WithMany("Bookings")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DAL.Models.Flight", "Flight")
                         .WithMany("Bookings")
                         .HasForeignKey("FlightsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAL.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Customer");
 
                     b.Navigation("Flight");
+                });
+
+            modelBuilder.Entity("DAL.Models.Customer", b =>
+                {
+                    b.HasOne("DAL.Models.User", "User")
+                        .WithOne("Customer")
+                        .HasForeignKey("DAL.Models.Customer", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -355,6 +388,11 @@ namespace DAL.Migrations
                     b.Navigation("Luggage");
                 });
 
+            modelBuilder.Entity("DAL.Models.Customer", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
             modelBuilder.Entity("DAL.Models.Flight", b =>
                 {
                     b.Navigation("Bookings");
@@ -362,6 +400,8 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Models.User", b =>
                 {
+                    b.Navigation("Customer");
+
                     b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618

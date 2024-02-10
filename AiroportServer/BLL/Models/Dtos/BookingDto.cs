@@ -11,8 +11,8 @@ namespace BLL.Models.Dtos
     {
         public int Id { get; set; }
 
-        public CustomerShortDto Customer { get; set; }
-        public int CustomerId { get; set; }
+        public UserShortDto User { get; set; }
+        public int UserId { get; set; }
 
         public FlightShortDto Flight { get; set; }
         public int FlightsId { get; set; }

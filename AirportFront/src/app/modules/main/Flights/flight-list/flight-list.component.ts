@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgModule, OnInit } from '@angular/core';
+import { FlightComponent } from '../flight/flight.component';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-flight-list',
@@ -13,3 +16,18 @@ export class FlightListComponent implements OnInit {
   }
 
 }
+
+
+
+@NgModule({
+  declarations: [
+    FlightListComponent,
+    FlightComponent
+  ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild([{path: "",component: FlightListComponent}])
+
+  ]
+})
+export class FlightListModule { }

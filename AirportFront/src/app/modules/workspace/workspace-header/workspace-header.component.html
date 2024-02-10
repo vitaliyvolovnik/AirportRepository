@@ -1,1 +1,10 @@
-<p>workspace-header works!</p>
+<div class="container cuprum-text">
+    <div class="header-part">
+        <img src="assets/images/logo/logo.png" alt="" class="logo">
+    </div>
+    <div class="header-part">
+        <button pButton class="item cuprum-text header-btn" 
+        *ngIf="(securityService.isAuthenticated$ | async) === false" routerLink="/">Go to site</button>
+        <button class="item reverse-text invisible">Logout</button>
+    </div>
+</div>

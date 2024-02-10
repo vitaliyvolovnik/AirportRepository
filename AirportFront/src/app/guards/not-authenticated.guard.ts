@@ -12,7 +12,8 @@ export class NotAuthenticatedGuard implements CanActivate{
 
         }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | 
+    UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
         if(!this.securityService.isAuthenticated()){
             return true;
         }

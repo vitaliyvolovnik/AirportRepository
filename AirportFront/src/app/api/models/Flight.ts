@@ -10,7 +10,9 @@ export interface Flight{
     arrivalDate:Date;
     departureDate:Date;
     terminal:Terminal;
+    ticketCost:number;
     crew?:Employee[];
-    bookigs?:Bookign[]
-    plane?:Plane
+    bookigs?:Bookign[];
+    plane?:Plane;
+    
 }

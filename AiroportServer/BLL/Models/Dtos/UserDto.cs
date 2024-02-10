@@ -24,6 +24,5 @@ namespace BLL.Models.Dtos
         public string Role { get; set; }
 
         public EmployeeDto? Employee { get; set; }
-        public CustomerDto? Customer { get; set; }
     }
 }

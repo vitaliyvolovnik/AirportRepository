@@ -17,13 +17,14 @@ namespace BLL.Models.Dtos
         public DateTime ArrivalDate { get; set; }
         public DateTime DepartureDate { get; set; }
 
+        public string? Status { get; set; }
+        public decimal TicketCost { get; set; }
+        public List<BookingDto>? Bookings { get; set; }
 
-        public List<BookingDto> Bookings { get; set; }
+        public List<EmployeeDto>? Crew { get; set; }
 
-        public List<EmployeeDto> Crew { get; set; }
-
-        public GateDto? Gate { get; set; }
-        public int GateId { get; set; }
+        public TerminalDto? Terminal { get; set; }
+        public int TerminalId { get; set; }
 
         public PlaneDto? Plane { get; set; }
         public int PlaneId { get; set; }
